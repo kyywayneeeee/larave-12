@@ -9,11 +9,9 @@ use App\Models\Product;
 use Illuminate\View\View;
 
 //import return type redirectResponse
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 //import Http Request
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 //import Facades Storage
@@ -93,7 +91,7 @@ class ProductController extends Controller
         //render view with product
         return view('products.show', compact('product'));
     }
-    
+
     /**
      * edit
      *
@@ -108,7 +106,7 @@ class ProductController extends Controller
         //render view with product
         return view('products.edit', compact('product'));
     }
-        
+
     /**
      * update
      *
@@ -162,5 +160,26 @@ class ProductController extends Controller
 
         //redirect to index
         return redirect()->route('products.index')->with(['success' => 'Data Berhasil Diubah!']);
+    }
+    
+    /**
+     * destroy
+     *
+     * @param  mixed $id
+     * @return RedirectResponse
+     */
+    public function destroy($id): RedirectResponse
+    {
+        //get product by ID
+        $product = Product::findOrFail($id);
+
+        //delete image
+        Storage::delete('products/'. $product->image);
+
+        //delete product
+        $product->delete();
+
+        //redirect to index
+        return redirect()->route('products.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 }
